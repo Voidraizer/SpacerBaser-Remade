@@ -13,6 +13,18 @@ public class MenuManager_script : MonoBehaviour {
 
     [SerializeField]
     private Text profileNameObj;
+    [SerializeField]
+    private Text astCountObj;
+    [SerializeField]
+    private Slider astCountSlider;
+    [SerializeField]
+    private Text astRichObj;
+    [SerializeField]
+    private Slider astRichSlider;
+    [SerializeField]
+    private Text astBeltObj;
+    [SerializeField]
+    private Slider astBeltSlider;
 
     [SerializeField]
     private GameObject[] MenuSlides;
@@ -59,10 +71,34 @@ public class MenuManager_script : MonoBehaviour {
                 }
             }
         }
+
+        if( ActiveMenu == CUSTOMMENU )
+        {
+            astCountObj.text = astCountSlider.value.ToString();
+            astRichObj.text = Mathf.Round( astRichSlider.value * 100f ).ToString() + "%";
+            switch( astBeltSlider.value.ToString() )
+            {
+                case "0":
+                    astBeltObj.text = "Horizontal Belt";
+                    break;
+                case "1":
+                    astBeltObj.text = "Angled Belt";
+                    break;
+                case "2":
+                    astBeltObj.text = "Vertical Belt";
+                    break;
+                case "3":
+                    astBeltObj.text = "Ring Belt";
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void Menu2MenuTransition( int incomingMenu )
     {
+        menuTransitionSpeed = Screen.width * 2.5f;
         StartCoroutine( M2MTransitionIn( incomingMenu ) );
         StartCoroutine( M2MTransitionOut( ActiveMenu ) );
     }
@@ -99,7 +135,7 @@ public class MenuManager_script : MonoBehaviour {
         Vector2 goal = new Vector2( startPos.x - Screen.width, startPos.y );
         float timeDiff = 0f;
         float totalDistance = Vector2.Distance( startPos, goal );
-        yield return new WaitForSeconds( 0.1f );
+        yield return new WaitForSeconds( 0.05f );
         while( lerping )
         {
             timeDiff += Time.deltaTime;
@@ -134,7 +170,7 @@ public class MenuManager_script : MonoBehaviour {
     {
         if( ActiveMenu == MAINMENU )
         {
-
+            Menu2MenuTransition( CUSTOMMENU );
         }
     }
 
@@ -249,14 +285,21 @@ public class MenuManager_script : MonoBehaviour {
      *                           CUSTOM MENU BUTTONS                             *
      *****************************************************************************/
 
+    public void Custom_Start()
+    {
+        if( ActiveMenu == CUSTOMMENU )
+        {
+            
+        }
+    }
 
-
-
-
-
-
-
-
+    public void Custom_Back()
+    {
+        if( ActiveMenu == CUSTOMMENU )
+        {
+            Menu2MenuTransition( MAINMENU );
+        }
+    }
 
     /*****************************************************************************
      *                          PROFILE MENU BUTTONS                             *
