@@ -35,19 +35,8 @@ public class MenuManager_script : MonoBehaviour {
 
     private int ActiveMenu = 0;
 
-    void Awake()
-    {
-        GameObject temp = GameObject.Find( "MenuManager" );
-        if( ( temp != null ) && ( temp != gameObject ) )
-        {
-            Destroy( gameObject );
-        }
-    }
-
     void Start()
     {
-        DontDestroyOnLoad( gameObject );
-
         profileNameObj.text = "Void!";
 
         if( profileNameObj != null )
