@@ -143,9 +143,68 @@ public class MenuManager_script : MonoBehaviour {
     }
 
 
-   /*****************************************************************************
-    *                             MAIN MENU BUTTONS                             *
-    *****************************************************************************/
+    // Do the same thing backwards for better effect going back menus
+    private void MenuBackUpTransition( int incomingMenu )
+    {
+        menuTransitionSpeed = Screen.width * 2.5f;
+        StartCoroutine( MBUTransitionIn( incomingMenu ) );
+        StartCoroutine( MBUTransitionOut( ActiveMenu ) );
+    }
+
+    private IEnumerator MBUTransitionOut( int outboundMenu )
+    {
+        bool lerping = true;
+        //float start = Time.time;
+        Vector2 startPos = MenuSlides[outboundMenu].transform.position;
+        Vector2 goal = new Vector2( startPos.x + Screen.width, startPos.y );
+        float timeDiff = 0f;
+        float totalDistance = Vector2.Distance( startPos, goal );
+        while( lerping )
+        {
+            timeDiff += Time.deltaTime;
+            float distanceTravelled = timeDiff * menuTransitionSpeed;
+
+            Vector2 pos = Vector2.Lerp( startPos, goal, distanceTravelled / totalDistance );
+            MenuSlides[outboundMenu].transform.position = pos;
+            //MenuSlides[currentMenu].transform.Translate( -menuTransitionSpeed, 0f, 0f );
+            yield return new WaitForEndOfFrame();
+            if( ( distanceTravelled / totalDistance ) >= 1f )
+            {
+                lerping = false;
+            }
+        }
+    }
+    private IEnumerator MBUTransitionIn( int inboundMenu )
+    {
+        bool lerping = true;
+        //float start = Time.time;
+        Vector2 startPos = new Vector2( MenuSlides[ActiveMenu].transform.position.x - Screen.width, MenuSlides[ActiveMenu].transform.position.y );
+        MenuSlides[inboundMenu].transform.position = startPos;
+        Vector2 goal = new Vector2( startPos.x + Screen.width, startPos.y );
+        float timeDiff = 0f;
+        float totalDistance = Vector2.Distance( startPos, goal );
+        yield return new WaitForSeconds( 0.05f );
+        while( lerping )
+        {
+            timeDiff += Time.deltaTime;
+            float distanceTravelled = timeDiff * menuTransitionSpeed;
+
+            Vector2 pos = Vector2.Lerp( startPos, goal, distanceTravelled / totalDistance );
+            MenuSlides[inboundMenu].transform.position = pos;
+            //MenuSlides[currentMenu].transform.Translate( -menuTransitionSpeed, 0f, 0f );
+            yield return new WaitForEndOfFrame();
+            if( ( distanceTravelled / totalDistance ) >= 1f )
+            {
+                lerping = false;
+                ActiveMenu = inboundMenu;
+            }
+        }
+    }
+
+
+    /*****************************************************************************
+     *                             MAIN MENU BUTTONS                             *
+     *****************************************************************************/
 
     public void Main_StoryButton()
     {
@@ -266,7 +325,7 @@ public class MenuManager_script : MonoBehaviour {
     {
         if( ActiveMenu == STORYMENU )
         {
-            Menu2MenuTransition( MAINMENU );
+            MenuBackUpTransition( MAINMENU );
         }
     }
 
@@ -286,7 +345,7 @@ public class MenuManager_script : MonoBehaviour {
     {
         if( ActiveMenu == CUSTOMMENU )
         {
-            Menu2MenuTransition( MAINMENU );
+            MenuBackUpTransition( MAINMENU );
         }
     }
 
