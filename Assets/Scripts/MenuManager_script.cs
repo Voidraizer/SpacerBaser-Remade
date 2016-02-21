@@ -337,7 +337,7 @@ public class MenuManager_script : MonoBehaviour {
     {
         if( ActiveMenu == CUSTOMMENU )
         {
-            
+            SceneManager.LoadScene( "game" );
         }
     }
 
